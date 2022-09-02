@@ -14,6 +14,7 @@ Tested in Openwrt 22.03.0-rc6.
 1. Grant executable privileges
 
     `chmod 500 /etc/init.d/autoauth`
+
     `chmod 500 /etc/autoauth.sh`
 1. Run `/etc/init.d/autoauth start` to test if it works (There will be no output for normal operation, please check the system log to determine if it is normal.)
 1. Run `/etc/init.d/autoauth enable` to enable autostart
