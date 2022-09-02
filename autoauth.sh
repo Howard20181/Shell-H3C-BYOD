@@ -55,27 +55,6 @@ byodserverhttpport="30004"
 SLEEP_TIME="1"
 RECONN_COUNT="0"
 
-urldecode() {
-    if [ -n "$1" ]; then
-        echo "$1" | sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"
-    else
-        echo "Usage: urldecode <string-to-urldecode>"
-        return 1
-    fi
-}
-
-encodeURIComponent() {
-    local data
-    data=$1
-    if [ -n "$1" ]; then
-        data="$(echo "$data" | curl -Gso /dev/null -w "%{url_effective}\n" --data-urlencode @- "" | sed -E 's/..(.*).../\1/')"
-    else
-        echo "Usage: encodeURIComponent <string-to-urlencode>"
-        return 1
-    fi
-    echo "${data##/?}"
-}
-
 get_json_value() {
     echo "$1" | jsonfilter -e "$.$2"
 }
@@ -107,9 +86,6 @@ NET_AVAILABLE() {
     fi
 }
 
-doHeartBeat() {
-    LOG D "doHeartBeat: No need to implement"
-}
 restart_auth() {
     RECONN_COUNT=$((RECONN_COUNT + 1))
     SLEEP_TIME=$(( SLEEP_TIME * RECONN_COUNT))
@@ -148,6 +124,7 @@ start_auth() {
             mac=$(get_json_value "$JSON" data.byodMacRegistInfo.mac)
             LOG I "mac: $mac"
             unset portServIncludeFailedCode
+            SLEEP_TIME=300
         elif [ "$code" = "-1" ]; then #认证失败
             LOG E "$msg"
             data=$(get_json_value "$JSON" data)
@@ -164,6 +141,7 @@ start_auth() {
                     sleep $SLEEP_TIME
                 done
                 LOG I "continue"
+                restart_auth
             fi
         else
             LOG E "Unknow error. EXIT!"
