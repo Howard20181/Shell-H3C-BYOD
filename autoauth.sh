@@ -99,19 +99,20 @@ NET_AVAILABLE() {
 }
 
 restart_auth() {
-    RECONN_COUNT=$((RECONN_COUNT + 1))
-    SLEEP_TIME=$(( SLEEP_TIME * RECONN_COUNT))
+    RECONN_COUNT=$(( RECONN_COUNT + 1 ))
+    SLEEP_TIME=$(( SLEEP_TIME * RECONN_COUNT ))
     LOG N "Wait ${SLEEP_TIME}s"
     sleep "$SLEEP_TIME"
     LOG N "Reconnecting: $RECONN_COUNT TIME"
     start_auth
 }
+
 start_auth() {
     LOG I "Start auth"
-    LOG I "Send Login request"
-    local PWD_BASE64 JSON code TIME
+    local PWD_BASE64 JSON code
     PWD_BASE64="$(printf "%s" "$PWD" | base64)" # 不使用echo，因为会多个换行符
     appRootUrl="http://$byodserverip:$byodserverhttpport/byod/"
+    LOG I "Send Login request"
     JSON=$(curl -s ''$appRootUrl'byodrs/login/defaultLogin' \
         -H 'Accept: application/json, text/javascript, */*; q=0.01' \
         -H 'Accept-Language: zh-CN,zh;q=0.9' \
@@ -130,8 +131,7 @@ start_auth() {
         msg=$(get_json_value "$JSON" msg)
         LOG D "code=$code"
         if [ "$code" = "0" ]; then #认证成功
-            TIME=$(date '+%Y-%m-%d %H:%M:%S')
-            LOG I "Login Success $TIME"
+            LOG I "Login Success $(date '+%Y-%m-%d %H:%M:%S')"
             LOG I "$msg"
             mac=$(get_json_value "$JSON" data.byodMacRegistInfo.mac)
             LOG I "mac: $mac"
@@ -142,20 +142,20 @@ start_auth() {
             data=$(get_json_value "$JSON" data)
             if [ -n "$data" ]; then
                 portServIncludeFailedCode=${msg:1:5}
-            fi
-            if [ -n "$portServIncludeFailedCode" ]; then
-                for i in "${FATAL_CODES[@]}"; do
-                    if [ "$portServIncludeFailedCode" = "$i" ]; then
-                        LOG E "EXIT!"
-                        exit 1
-                    fi
-                done
-                while SHOULD_STOP; do
-                    LOG D "sleep ${SLEEP_TIME}s"
-                    sleep $SLEEP_TIME
-                done
-                LOG I "continue"
-                restart_auth
+                if [ -n "$portServIncludeFailedCode" ]; then
+                    for i in "${FATAL_CODES[@]}"; do
+                        if [ "$portServIncludeFailedCode" = "$i" ]; then
+                            LOG E "EXIT!"
+                            exit 1
+                        fi
+                    done
+                    while SHOULD_STOP; do
+                        LOG D "sleep ${SLEEP_TIME}s"
+                        sleep $SLEEP_TIME
+                    done
+                    LOG I "continue"
+                    restart_auth
+                fi
             fi
         else
             LOG E "Unknow error. EXIT!"
