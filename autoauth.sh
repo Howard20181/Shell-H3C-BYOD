@@ -55,6 +55,18 @@ byodserverhttpport="30004"
 SLEEP_TIME="1"
 RECONN_COUNT="0"
 
+FATAL_CODES=(
+    "63013"
+    "63015"
+    "63018"
+    "63025"
+    "63026"
+    "63031"
+    "63032"
+    "63100"
+    "63073"
+)
+
 get_json_value() {
     echo "$1" | jsonfilter -e "$.$2"
 }
@@ -132,10 +144,12 @@ start_auth() {
                 portServIncludeFailedCode=${msg:1:5}
             fi
             if [ -n "$portServIncludeFailedCode" ]; then
-                if [ "$portServIncludeFailedCode" = "63013" ] || [ "$portServIncludeFailedCode" = "63015" ] || [ "$portServIncludeFailedCode" = "63018" ] || [ "$portServIncludeFailedCode" = "63025" ] || [ "$portServIncludeFailedCode" = "63026" ] || [ "$portServIncludeFailedCode" = "63031" ] || [ "$portServIncludeFailedCode" = "63032" ] || [ "$portServIncludeFailedCode" = "63100" ] || [ "$portServIncludeFailedCode" = "63073" ]; then
-                    LOG E "EXIT!"
-                    exit
-                fi
+                for i in "${FATAL_CODES[@]}"; do
+                    if [ "$portServIncludeFailedCode" = "$i" ]; then
+                        LOG E "EXIT!"
+                        exit 1
+                    fi
+                done
                 while SHOULD_STOP; do
                     LOG D "sleep ${SLEEP_TIME}s"
                     sleep $SLEEP_TIME
