@@ -8,7 +8,7 @@ Tested in Openwrt 22.03.0-rc6.
 
 ### Usage
 
-1. Place `autoauth.sh` and `user.conf` in `\etc`
+1. Place `autoauth.sh` and `user.conf` in `/etc`
 1. Edit the username and password in `user.conf`
 1. Place `autoauth` in `/etc/init.d`
 1. Grant executable privileges
