@@ -1,0 +1,33 @@
+#!/bin/sh /etc/rc.common
+# shellcheck disable=SC2034
+START=96 #OpenWrt: 95 done
+PNAME="autoauth.sh"
+stop() {
+    killall -q $PNAME
+}
+start() {
+    stop
+    logger -t "autoauth" -p user.info "HELLO!"
+    /etc/$PNAME >/dev/null 2>&1 &
+}
+boot() {
+    logger -t "autoauth" -p user.info "HELLO!"
+    /etc/$PNAME >/dev/null 2>&1 &
+}
+NET_AVAILABLE() {
+    if [ "$(curl -sI -w "%{http_code}" -o /dev/null connect.rom.miui.com/generate_204)" = 204 ]; then
+        logger -t "autoauth" -p user.info "The internet connection works!"
+        return 0
+    else
+        return 1
+    fi
+}
+restart() {
+    if ! (NET_AVAILABLE); then
+        stop
+        start
+    fi
+}
+reload() {
+    restart
+}
