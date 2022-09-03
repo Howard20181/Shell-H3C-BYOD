@@ -2,11 +2,11 @@
 
 Tested in Openwrt 22.03.0-rc6.
 
-## dependence
+## Dependences
 
     bash curl coreutils-base64
 
-### Usage
+## Usage
 
 1. Place `autoauth.sh` and `user.conf` in `/etc`
 1. Edit the username and password in `user.conf`
