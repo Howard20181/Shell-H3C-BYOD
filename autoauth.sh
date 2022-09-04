@@ -147,6 +147,9 @@ validate_track_method() {
 				return 1
 			}
 			;;
+        *)
+            return 1
+        ;;
 	esac
 }
 
