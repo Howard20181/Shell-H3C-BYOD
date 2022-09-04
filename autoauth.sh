@@ -46,6 +46,12 @@ LOG() {
         echo "Info: $1"
     fi
 }
+
+greeting_sleep() {
+    LOG N "Sleep $1 seconds"
+    sleep "$1"
+}
+
 if [ -f "$CONF" ]; then
     # shellcheck source=./user.conf
     # shellcheck disable=SC1091
@@ -180,12 +186,10 @@ NET_AVAILABLE() {
 restart_auth() {
     RECONN_COUNT=$(( RECONN_COUNT + 1 ))
     if SHOULD_STOP; then
-        LOG N "sleep ${SLEEP_TIME}s"
-        sleep $SLEEP_TIME
+        greeting_sleep $SLEEP_TIME
     else
         SLEEP_TIME=$(( SLEEP_TIME * RECONN_COUNT ))
-        LOG N "Wait ${SLEEP_TIME}s"
-        sleep "$SLEEP_TIME"
+        greeting_sleep "$SLEEP_TIME"
         LOG N "Reconnecting: $RECONN_COUNT TIME"
     fi
     LOG I "continue"
@@ -258,5 +262,5 @@ while true; do
     if ! (NET_AVAILABLE); then
         restart_auth
     fi
-    sleep $SLEEP_TIME
+    greeting_sleep $SLEEP_TIME
 done
