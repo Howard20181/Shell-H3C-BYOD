@@ -5,7 +5,7 @@ BasePath=$(
     pwd
 )
 # shellcheck disable=SC1091
-. "$BasePath"/autoauth_common.sh
+. "$BasePath"/autoauth_common.sh || exit 1
 
 if [ ! "$BASH_VERSION" ]; then
     LOG "$TAG" E "Please do not use sh to run this script, just execute it directly" 1>&2

@@ -5,7 +5,7 @@ PNAME="autoauth.sh"
 BasePath=/etc
 TAG="autoauth"
 # shellcheck disable=SC1091
-. $BasePath/autoauth_common.sh
+. $BasePath/autoauth_common.sh || exit 1
 
 stop() {
     killall -q $PNAME
