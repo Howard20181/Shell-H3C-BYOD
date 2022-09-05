@@ -1,5 +1,5 @@
 #!/bin/bash
-
+trap 'trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
 BasePath=$(
     cd "$(dirname "$0")" || exit 1
     pwd
@@ -21,7 +21,8 @@ greeting_sleep() {
         LOG "$TAG" W "Limit maximum sleep time to $1 seconds"
     fi
     LOG "$TAG" D "Sleep $1 seconds"
-    sleep "$1"
+    sleep "$1" &
+    wait
 }
 
 if [ -f "$CONF" ]; then
