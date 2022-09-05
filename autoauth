@@ -2,30 +2,30 @@
 # shellcheck disable=SC2034
 START=96 #OpenWrt: 95 done
 PNAME="autoauth.sh"
+BasePath=/etc
+TAG="autoauth"
+# shellcheck disable=SC1091
+. $BasePath/autoauth_common.sh
+
 stop() {
     killall -q $PNAME
 }
 start() {
     stop
-    logger -t "autoauth" -p user.info "HELLO!"
+    LOG "$TAG" I "Starting $PNAME"
     /etc/$PNAME >/dev/null 2>&1 &
 }
 boot() {
-    logger -t "autoauth" -p user.info "HELLO!"
+    LOG "$TAG" I "autostart: HELLO!"
     /etc/$PNAME >/dev/null 2>&1 &
 }
-NET_AVAILABLE() {
-    if [ "$(curl -sI -w "%{http_code}" -o /dev/null connect.rom.miui.com/generate_204)" = 204 ]; then
-        logger -t "autoauth" -p user.info "The internet connection works!"
-        return 0
-    else
-        return 1
-    fi
-}
+
 restart() {
     if ! (NET_AVAILABLE); then
         stop
         start
+    else
+        LOG "$TAG" I "The internet connection works! No need to restart $PNAME"
     fi
 }
 reload() {
