@@ -1,5 +1,5 @@
 #!/bin/bash
-trap 'trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
+trap 'jobs -p | xargs -r kill' EXIT
 BasePath=$(
     cd "$(dirname "$0")" || exit 1
     pwd
