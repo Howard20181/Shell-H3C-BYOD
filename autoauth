@@ -13,20 +13,16 @@ stop() {
 start() {
     stop
     LOG "$TAG" I "Starting $PNAME"
-    /etc/$PNAME >/dev/null 2>&1 &
+    $BasePath/$PNAME >/dev/null 2>&1 &
 }
 boot() {
     LOG "$TAG" I "autostart: HELLO!"
-    /etc/$PNAME >/dev/null 2>&1 &
+    $BasePath/$PNAME >/dev/null 2>&1 &
 }
 
 restart() {
-    if ! (NET_AVAILABLE); then
-        stop
-        start
-    else
-        LOG "$TAG" I "The internet connection works! No need to restart $PNAME"
-    fi
+    stop
+    start
 }
 reload() {
     restart
