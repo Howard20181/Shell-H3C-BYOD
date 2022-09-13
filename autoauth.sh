@@ -85,11 +85,12 @@ SHOULD_STOP() {
 }
 
 restart_auth() {
+    SLEEP_TIME="1"
     RECONN_COUNT=$(( RECONN_COUNT + 1 ))
     if SHOULD_STOP; then
         greeting_sleep $SLEEP_TIME
     else
-        SLEEP_TIME=$(( SLEEP_TIME * RECONN_COUNT ))
+        SLEEP_TIME=$(( RECONN_COUNT * RECONN_COUNT ))
         greeting_sleep "$SLEEP_TIME"
         LOG "$TAG" N "Reconnecting: $RECONN_COUNT TIME"
     fi
