@@ -34,7 +34,6 @@ if [ -f "$CONF" ]; then
         exit
     else
         LOG "$TAG" D "USERID: $USERID"
-        LOG "$TAG" D "PWD: $PWD"
     fi
 else
     LOG "$TAG" E "user.conf not found! EXIT!"
@@ -104,7 +103,7 @@ start_auth() {
     PWD_BASE64="$(printf "%s" "$PWD" | base64)" # 不使用echo，因为会多个换行符
     appRootUrl="http://$byodserverip:$byodserverhttpport/byod/"
     LOG "$TAG" I "Send Login request"
-    JSON=$(curl -s ''$appRootUrl'byodrs/login/defaultLogin' \
+    JSON=$(curl -s -S ''$appRootUrl'byodrs/login/defaultLogin' \
         -H 'Accept: application/json, text/javascript, */*; q=0.01' \
         -H 'Accept-Language: zh-CN,zh;q=0.9' \
         -H 'Content-Type: application/json' \
@@ -113,12 +112,11 @@ start_auth() {
         --data-raw '{"userName":"'"$USERID"'","userPassword":"'"$PWD_BASE64"'","serviceSuffixId":"-1","dynamicPwdAuth":false,"userGroupId":-1,"validationType":2,"guestManagerId":-1}' \
         --insecure)
     wait $!
-    result=$?
-    if [ $result -ne 0 ] || [ -z "$JSON" ]; then #未收到回应，网络错误
+    LOG "$TAG" D "Login request JSON: $JSON"
+    if [ -z "$JSON" ]; then #未收到回应，网络错误
         LOG "$TAG" E "Network error"
         restart_auth
     else #收到回应，可以连接上认证服务器
-        LOG "$TAG" D "JSON: $JSON"
         code=$(get_json_value "$JSON" code)
         msg=$(get_json_value "$JSON" msg)
         LOG "$TAG" D "code=$code"
