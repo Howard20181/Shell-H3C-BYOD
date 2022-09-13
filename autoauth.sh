@@ -74,6 +74,7 @@ SHOULD_STOP() {
             else
                 SLEEP_TIME=$(( TIME_STOP2 + 86400 - TIME_CUR ))
             fi
+            RECONN_COUNT="0"
             return 0
         else
             SLEEP_TIME="1"
