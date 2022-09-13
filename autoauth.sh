@@ -88,8 +88,10 @@ restart_auth() {
     SLEEP_TIME="1"
     RECONN_COUNT=$(( RECONN_COUNT + 1 ))
     if SHOULD_STOP; then
+        MAX_SLEEP_TIME=86400
         greeting_sleep $SLEEP_TIME
     else
+        MAX_SLEEP_TIME=600
         SLEEP_TIME=$(( RECONN_COUNT * RECONN_COUNT ))
         greeting_sleep "$SLEEP_TIME"
         LOG "$TAG" N "Reconnecting: $RECONN_COUNT TIME"
