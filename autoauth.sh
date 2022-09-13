@@ -14,7 +14,7 @@ fi
 
 CONF="$BasePath"/user.conf
 TAG=$(basename "$0")
-MAX_SLEEP_TIME=1800
+MAX_SLEEP_TIME=600
 greeting_sleep() {
     if [ "$1" -gt $MAX_SLEEP_TIME ]; then
         set -- $MAX_SLEEP_TIME
