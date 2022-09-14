@@ -131,6 +131,7 @@ start_auth() {
             LOG "$TAG" I "mac: $mac"
             unset portServIncludeFailedCode
             SLEEP_TIME=300
+            RECONN_COUNT="0"
         elif [ "$code" = "-1" ]; then #认证失败
             LOG "$TAG" E "$msg"
             data=$(get_json_value "$JSON" data)
