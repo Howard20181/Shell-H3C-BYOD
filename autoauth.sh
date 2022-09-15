@@ -65,7 +65,7 @@ get_json_value() {
 SHOULD_STOP() {
     local TIME_STOP1 TIME_STOP2 TIME_CUR
     TIME_STOP1=$(date -d "$(date '+%Y-%m-%d 23:40:00')" +%s)
-    TIME_STOP2=$(date -d "$(date '+%Y-%m-%d 07:00:00')" +%s)
+    TIME_STOP2=$(date -d "$(date '+%Y-%m-%d 06:35:00')" +%s)
     TIME_CUR=$(date +%s)
     if [ "$portServIncludeFailedCode" = "63027" ]; then
         if [ "$TIME_CUR" -gt "$TIME_STOP1" ] || [ "$TIME_CUR" -lt "$TIME_STOP2" ]; then
