@@ -103,7 +103,7 @@ restart_auth() {
 
 start_auth() {
     LOG "$TAG" I "Start auth"
-    local PWD_BASE64 JSON code result
+    local PWD_BASE64 JSON code
     PWD_BASE64="$(printf "%s" "$PWD" | base64)" # 不使用echo，因为会多个换行符
     appRootUrl="http://$byodserverip:$byodserverhttpport/byod/"
     LOG "$TAG" I "Send Login request"
